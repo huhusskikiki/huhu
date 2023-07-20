@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+  Original file: https://github.paypal.com/UIDeploy/ResourceDeploy/blob/master/unifiedlogin/googleSignIn.html
+  This is a file that is shared between ANW and UL. ANW was originally calling the paypalobjects cdn for the manual Google Sign-in experience.
+  However, because the domain displayed paypalobjects in the auth chooser screen, the decision was to host this iframe locally to provide the user with a paypal.com domain
+-->
+<html>
+
+<head>
+  <script src="https://apis.google.com/js/api:client.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script>
+      function getKey(n){var t=new RegExp("[\\?&]"+n+"=([^&#]*)").exec(window.location.href);return null!==t?t[1]:""}var startApp=function(){const n=`:${window.location.port}`;window.location.origin||(window.location.origin=`${window.location.protocol}//${window.location.hostname}${window.location.port?n:""}`);var t=getKey("clientId"),i=(getKey("method"),getKey("fullPageRedirect")),e=getKey("redirectUri");gapi.load("auth2",function(){auth2=gapi.auth2.init({client_id:t,oidc_spec_compliant:!0,...i&&e&&{ux_mode:"redirect",redirect_uri:e}}),attachSignin(document.getElementById("proxyBtn"))})};function handleError(n,t){var i={source:"smartlock",method:t,error:n&&"string"==typeof n.error?n.error:"Call failed due to exception"};window.parent.postMessage(JSON.stringify(i),window.location.origin)}function handleSignInResult(n){var t=n.getAuthResponse().id_token,i=t&&JSON.parse(atob(t.split(".")[1]));n?window.parent.postMessage(JSON.stringify({source:"smartlock",method:"signin",idToken:t,name:i.name,email:i.email,image:i.picture}),window.location.origin):handleError({type:"id_token absent"},"signin")}function attachSignin(n){var t="true"===getKey("prompt")?"select_account":"",i=new gapi.auth2.SigninOptionsBuilder;i.setPrompt(t),auth2.attachClickHandler(n,i,handleSignInResult,function(n){handleError(n,"signin")})}window.onmessage=function(n){if(n.origin===window.location.origin){var t;try{t=n&&JSON.parse(n.data)}catch(t){return void window.parent.postMessage(JSON.stringify({error:"error_parsing_data",source:"slAuth"}),n.origin)}if(t&&"UL"===t.source&&"gSignIn"===t.authIntent)document.getElementById("proxyBtn").click()}};
+  </script>
+</head>
+
+<body>
+  <script>
+    startApp();
+  </script>
+  <button id="proxyBtn"></button>
+</body>
+
+</html>
